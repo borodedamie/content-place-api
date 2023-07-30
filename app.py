@@ -1,11 +1,13 @@
 from flask import Flask
 from flask_restful import Api
 import os
+from flask_cors import CORS
 from resources.article import Articles
 from resources.comment import Comments
 
 app = Flask(__name__)
 api = Api(app)
+cors = CORS(app)
 
 app.config['AIRTABLE_BASE_ID'] = os.environ.get('AIRTABLE_BASE_ID')
 app.config['AIRTABLE_API_KEY'] = os.environ.get('AIRTABLE_API_KEY')
