@@ -1,6 +1,8 @@
 import requests
 from flask import current_app, request
 from flask_restful import Resource
+from pyairtable import Table
+
 
 class Articles(Resource):
     def get(self):
@@ -31,3 +33,15 @@ class Articles(Resource):
         }
 
         return result
+
+
+class Article(Resource):
+    def __init__(self):
+        self.base_id = current_app.config['AIRTABLE_BASE_ID']
+        self.api_key = current_app.config['AIRTABLE_API_KEY']
+        self.table_name = 'Articles'
+        self.table = Table(self.api_key, self.base_id, self.table_name)
+
+    def get(self, article_id):
+        record = self.table.get(article_id)
+        return record
