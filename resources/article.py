@@ -4,32 +4,70 @@ from flask_restful import Resource
 from pyairtable import Table
 
 
+# class Articles(Resource):
+#     def get(self):
+#         base_id = current_app.config['AIRTABLE_BASE_ID']
+#         api_key = current_app.config['AIRTABLE_API_KEY']
+#         table_name = 'Articles'
+
+#         # Get the page size and offset from the request arguments
+#         page_size = request.args.get('page_size', 6)
+#         offset = request.args.get('offset')
+
+#         url = f'https://api.airtable.com/v0/{base_id}/{table_name}'
+#         headers = {'Authorization': f'Bearer {api_key}'}
+#         params = {'maxRecords': page_size, 'pageSize': page_size}
+
+#         if offset:
+#             params['offset'] = offset
+
+#         response = requests.get(url, headers=headers, params=params)
+#         data = response.json()
+
+#         records = data['records']
+#         next_offset = data.get('offset')
+
+#         result = {
+#             'records': records,
+#             'offset': next_offset
+#         }
+
+#         return result
+
 class Articles(Resource):
     def get(self):
         base_id = current_app.config['AIRTABLE_BASE_ID']
         api_key = current_app.config['AIRTABLE_API_KEY']
         table_name = 'Articles'
 
-        # Get the page size and offset from the request arguments
-        page_size = request.args.get('page_size', 6)
-        offset = request.args.get('offset')
-
         url = f'https://api.airtable.com/v0/{base_id}/{table_name}'
         headers = {'Authorization': f'Bearer {api_key}'}
-        params = {'maxRecords': page_size, 'pageSize': page_size}
 
-        if offset:
-            params['offset'] = offset
+        # Initialize an empty list to store all the records
+        all_records = []
+        # Initialize the offset variable
+        offset = None
 
-        response = requests.get(url, headers=headers, params=params)
-        data = response.json()
+        # Keep fetching records until there are no more records
+        while True:
+            params = {}
+            if offset:
+                params['offset'] = offset
 
-        records = data['records']
-        next_offset = data.get('offset')
+            response = requests.get(url, headers=headers, params=params)
+            data = response.json()
+
+            records = data['records']
+            all_records.extend(records)
+
+            # Check if there is an offset in the response
+            if 'offset' in data:
+                offset = data['offset']
+            else:
+                break
 
         result = {
-            'records': records,
-            'offset': next_offset
+            'records': all_records
         }
 
         return result
