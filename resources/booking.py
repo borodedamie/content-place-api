@@ -15,6 +15,7 @@ class Bookings(Resource):
         record = {
             "First Name": data.get('first_name'),
             "Last Name": data.get('last_name'),
+            "Email": data.get('email'),
             "Phone Number": data.get('phone_number'),
             "Session Time": data.get('session_time'),
             "How did you hear about us": data.get('how_did_you_hear_about_us'),

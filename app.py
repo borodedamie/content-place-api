@@ -5,6 +5,7 @@ from flask_cors import CORS
 from resources.article import Articles, Article
 from resources.comment import Comments
 from resources.booking import Bookings
+from resources.contact import Contacts
 
 app = Flask(__name__)
 api = Api(app)
@@ -18,6 +19,7 @@ api.add_resource(Articles, '/articles')
 api.add_resource(Comments, '/comments/<string:article_id>')
 api.add_resource(Article, '/articles/<string:article_id>')
 api.add_resource(Bookings, '/bookings')
+api.add_resource(Contacts, '/contacts')
 
 if __name__ == '__main__':
     app.run(debug=True)
